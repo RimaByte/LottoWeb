@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lottospiel</title>
+    <style>
+        body {
+            background-color: #1a1a2e;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: #f5c518;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        .eingabe-zeile {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+
+        label {
+            width: 70px;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        input {
+            padding: 8px;
+            width: 80px;
+            text-align: center;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #f5c518;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #e6b800;
+        }
+
+        form {
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        p {
+            margin: 8px 0;
+        }
+		
+		table {
+		    border-collapse: collapse;
+		}
+
+		td, th {
+		    padding: 8px 15px;
+		}
+
+        .fehler {
+            color: red;
+        }
+		.ergebnis {
+		    font-weight: bold;
+		    font-size: 18px;
+		    margin: 5px 0;
+		}
+		
+		.treffer {
+			font-weight: bold;
+			font-size: 18px;
+			margin: 5px 0;
+			color: green;
+		}
+    </style>
+</head>
+<body>
+    <h1>Lottospiel</h1>
+
+    <form action="/eingabe" method="POST">
+        <h3>Gib 6 Zahlen ein (1-49):</h3>
+		
+		<p class="fehler" th:if="${fehler}" th:text="${fehler}"></p>
+		
+        <div class="eingabe-zeile">
+            <label>Zahl 1:</label>
+            <input type="number" name="zahl1" min="1" max="49" required/>
+        </div>
+        <div class="eingabe-zeile">
+            <label>Zahl 2:</label>
+            <input type="number" name="zahl2" min="1" max="49" required/>
+        </div>
+        <div class="eingabe-zeile">
+            <label>Zahl 3:</label>
+            <input type="number" name="zahl3" min="1" max="49" required/>
+        </div>
+        <div class="eingabe-zeile">
+            <label>Zahl 4:</label>
+            <input type="number" name="zahl4" min="1" max="49" required/>
+        </div>
+        <div class="eingabe-zeile">
+            <label>Zahl 5:</label>
+            <input type="number" name="zahl5" min="1" max="49" required/>
+        </div>
+        <div class="eingabe-zeile">
+            <label>Zahl 6:</label>
+            <input type="number" name="zahl6" min="1" max="49" required/>
+        </div>
+
+
+        <button type="submit">Zahlen absenden</button>
+    </form>
+	
+
+
+
+
+    <form action="/ziehung" method="POST">
+        <button type="submit">Ziehung</button>
+    </form>
+	<p class="ergebnis" th:if="${eingabe}" th:text="'Deine Zahlen: ' + ${eingabe}"></p>
+
+    <p class="ergebnis" th:if="${ziehung}" th:text="'Ziehung: ' + ${ziehung}"></p>
+
+    <p class="treffer" th:if="${treffer}" th:text="'Treffer: ' + ${treffer}"></p>
+	
+	<h3>Historie</h3>
+	<table>
+	    <tr>
+	        <th>Datum</th>
+	        <th>Deine Zahlen</th>
+	        <th>Ziehung</th>
+	        <th>Treffer</th>
+	    </tr>
+	    <tr th:each="eintrag : ${historie}">
+	        <td class="ergebnis" th:text="${eintrag.datum}"></td>
+	        <td class="ergebnis" th:text="${eintrag.eingabe}"></td>
+	        <td class="ergebnis" th:text="${eintrag.ziehung}"></td>
+	        <td class="treffer" th:text="${eintrag.treffer}"></td>
+			<td>
+			      <form th:action="@{/historie/delete/{id}(id=${eintrag.id})}" method="POST">
+			          <button type="submit">Löschen</button>
+			      </form>
+			  </td>
+	    </tr>
+	</table>
+
+</body>
+</html>
